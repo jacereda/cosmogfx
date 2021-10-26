@@ -7,3 +7,7 @@ Linux tested for now, feedback about other systems welcome).
 I don't have any interest right now on macOS given their reluctance to
 follow OpenGL/Vulkan standards, but it should be easy to make it run
 on that as well.
+
+* Building
+
+Just modify the =mk= script to point to your =zipobj.com= and run it.
