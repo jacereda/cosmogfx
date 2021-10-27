@@ -48,6 +48,20 @@ cont(void **p, int argc, char **argv)
 	cvrun_xlib(argc, argv);
 }
 
+static const char *
+guess_interp(char *buf, size_t sz)
+{
+	FILE *f = popen("readelf -Wp.interp $SHELL", "r");
+	assert(f);
+	size_t n = fread(buf, 1, sz, f);
+	assert(n);
+	pclose(f);
+	const char *r = strchr(buf, '/');
+	assert(r);
+	*strchr(r, '\n') = 0;
+	return r;
+}
+
 int
 cosmogfx_init(int argc, char **argv)
 {
@@ -57,7 +71,9 @@ cosmogfx_init(int argc, char **argv)
 	else {
 		init_exec_elf(argv);
 		argv[argc] = (char *)cont;
-		exec_elf("/zip/b/helper", argc, argv);
+		char	    buf[256];
+		const char *interp = guess_interp(buf, sizeof(buf));
+		exec_elf("/zip/b/helper", interp, argc, argv);
 	}
 }
 
