@@ -2,9 +2,9 @@
 
 Standing on the shoulders of [[https://justine.lol/cosmopolitan/index.html][Cosmopolitan libc]] this proof of concept
 application should run on Windows and Unix systems running X11 (only
-Linux tested for now, feedback about other systems welcome).
+tested on NixOS for now, feedback about other systems welcome).
 
-I don't have any interest right now on macOS given their reluctance to
+I don't have any interest right now in macOS given their reluctance to
 follow OpenGL/Vulkan standards, but it should be easy to make it run
 on that as well.
 
