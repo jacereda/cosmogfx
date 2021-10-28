@@ -51,7 +51,7 @@ cont(void **p, int argc, char **argv)
 static const char *
 guess_interp(char *buf, size_t sz)
 {
-	FILE *f = popen("readelf -Wp.interp $SHELL", "r");
+	FILE *f = popen("readelf -Wp.interp /usr/bin/env", "r");
 	assert(f);
 	size_t n = fread(buf, 1, sz, f);
 	assert(n);

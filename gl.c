@@ -18,10 +18,7 @@ GalogenGetProcAddressWin(const char *name, unsigned arity)
 		if (!opengl32module) {
 			opengl32module = (int64_t)LoadLibraryA("opengl32.dll");
 		}
-		wglGetProcAddress = // dtrampoline(
-		    GetProcAddress(opengl32module, "wglGetProcAddress")
-		    //, 1)
-		    ;
+		wglGetProcAddress = GetProcAddress(opengl32module, "wglGetProcAddress");
 		assert(wglGetProcAddress);
 	}
 	void *ptr = wglGetProcAddress(name);
@@ -33,6 +30,7 @@ GalogenGetProcAddressWin(const char *name, unsigned arity)
 		}
 		ptr = GetProcAddress(opengl32module, name);
 	}
+	assert(ptr);
 	return dtrampoline(ptr, arity);
 }
 
@@ -46,6 +44,8 @@ GalogenGetProcAddressA(const char *name, unsigned arity)
 	static void *(*glXGetProcAddressARB)() = NULL;
 	if (NULL == lib) {
 		lib = dlopen("libGL.so", RTLD_LAZY);
+		if (!lib)
+		  lib = dlopen("libGL.so.1", RTLD_LAZY);
 		assert(lib);
 		glXGetProcAddressARB = dlsym(lib, "glXGetProcAddressARB");
 	}
