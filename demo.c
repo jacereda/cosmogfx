@@ -259,12 +259,39 @@ report(const char *name, const char *s)
 	fprintf(stderr, "%s:%s", name, s);
 }
 
+static void
+render(mu_Context *ctx, renderer *r)
+{
+	storage s;
+	r_begin(r, &s, cvWidth(), cvHeight());
+	r_clear(r, &s, mu_color(bg[0], bg[1], bg[2], 128));
+	mu_Command *cmd = NULL;
+	while (mu_next_command(ctx, &cmd)) {
+		switch (cmd->type) {
+		case MU_COMMAND_TEXT:
+			r_draw_text(r, &s, cmd->text.str, cmd->text.pos,
+			    cmd->text.color);
+			break;
+		case MU_COMMAND_RECT:
+			r_draw_rect(r, &s, cmd->rect.rect, cmd->rect.color);
+			break;
+		case MU_COMMAND_ICON:
+			r_draw_icon(r, &s, cmd->icon.id, cmd->icon.rect,
+			    cmd->icon.color);
+			break;
+		case MU_COMMAND_CLIP:
+			r_set_clip_rect(r, &s, cmd->clip.rect);
+			break;
+		}
+	}
+	r_present(r, &s);
+}
+
 intptr_t
 event(const ev *e)
 {
 	static mu_Context ctx;
 	static renderer	  r;
-	storage		  s;
 	intptr_t	  ret = 1;
 	cveventtype	  t = evType(e);
 	switch (t) {
@@ -325,29 +352,7 @@ event(const ev *e)
 		break;
 	case CVE_UPDATE:
 		process_frame(&ctx);
-		r_begin(&r, &s, cvWidth(), cvHeight());
-		r_clear(&r, &s, mu_color(bg[0], bg[1], bg[2], 128));
-		mu_Command *cmd = NULL;
-		while (mu_next_command(&ctx, &cmd)) {
-			switch (cmd->type) {
-			case MU_COMMAND_TEXT:
-				r_draw_text(&r, &s, cmd->text.str,
-				    cmd->text.pos, cmd->text.color);
-				break;
-			case MU_COMMAND_RECT:
-				r_draw_rect(
-				    &r, &s, cmd->rect.rect, cmd->rect.color);
-				break;
-			case MU_COMMAND_ICON:
-				r_draw_icon(&r, &s, cmd->icon.id,
-				    cmd->icon.rect, cmd->icon.color);
-				break;
-			case MU_COMMAND_CLIP:
-				r_set_clip_rect(&r, &s, cmd->clip.rect);
-				break;
-			}
-		}
-		r_present(&r, &s);
+		render(&ctx, &r);
 		break;
 	default:
 		ret = 0;
