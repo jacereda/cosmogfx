@@ -55,11 +55,11 @@ cosmogfx_init(int argc, char **argv)
 	if (IsWindows())
 		cvrun_win(argc, argv);
 	else {
-		init_exec_elf(argv);
+		elf_init(argv);
 		argv[argc] = (char *)cont;
 		char interp[256];
 		elf_interp(interp, sizeof(interp), "/usr/bin/env");
-		exec_elf("/zip/b/helper", interp, argc, argv);
+		elf_exec("/zip/b/helper", interp, argc, argv);
 	}
 }
 
