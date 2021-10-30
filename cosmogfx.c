@@ -55,7 +55,6 @@ cosmogfx_init(int argc, char **argv)
 	if (IsWindows())
 		cvrun_win(argc, argv);
 	else {
-		elf_init(argv);
 		argv[argc] = (char *)cont;
 		char interp[256];
 		elf_interp(interp, sizeof(interp), "/usr/bin/env");
