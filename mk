@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -e
 install -d b
-gcc -c foreign-dlopen/src/amd64/z_trampo.S -o b/z_trampo.o
-gcc helper.c -Wl,-Ttext-segment,0x40000000 -o b/helper -ldl
+gcc -pie helper.c -o b/helper -ldl
 ../cosmopolitan/build/bootstrap/zipobj.com  -b0x400000 -o b/helper.zip.o b/helper
-cosmoc -DDLOPEN=z_dlopen -DDLSYM=z_dlsym -Dmmap=__sys_mmap -Dmprotect=sys_mprotect -Dmunmap=sys_munmap \
-       -DZ_SMALL -DSTDLIB=1 -DAT_NULL=0 -DELFCLASS=ELFCLASS64 \
+gcc -c foreign-dlopen/src/amd64/z_trampo.S -o b/z_trampo.o
+cosmoc -DDLOPEN=z_dlopen -DDLSYM=z_dlsym \
+       -DZ_SMALL -DSTDLIB=1 -DELFCLASS=ELFCLASS64 \
        -DCV_NO_MAIN -DCV_DYN \
        -I../cosmopolitan -I. -Imicroui/demo -Imicroui/src -Ifake -Iglcv/src \
        -ffunction-sections -fdata-sections -Wl,-gc-sections \
-       -Os \
+       -Og -g \
        cosmogfx.c \
        dtrampoline.c \
        gl.c \
