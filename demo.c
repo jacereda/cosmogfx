@@ -364,9 +364,9 @@ event(const ev *e)
 #include "cosmogfx.h"
 
 int
-main(int argc, char **argv)
+main(int argc, char **argv, char **envp)
 {
-	cosmogfx_init(argc, argv);
+	cosmogfx_init(argc, argv, envp);
 }
 
 STATIC_STACK_SIZE(0x800000);

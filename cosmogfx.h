@@ -1,1 +1,1 @@
-int cosmogfx_init(int, char **);
+int cosmogfx_init(int, char **, char **);

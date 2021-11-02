@@ -1,11 +1,5 @@
 #include "cosmogfx.h"
-#include "foreign-dlopen/src/elf_loader.h"
-#include "foreign-dlopen/src/foreign_dlopen.h"
-
-void *(*z_dlopen)(const char *filename, int flags);
-void *(*z_dlsym)(void *handle, const char *symbol);
-int (*z_dlclose)(void *handle);
-char *(*z_dlerror)(void);
+#include "elf_loader.h"
 
 #include "glcv/src/cv.c"
 
@@ -44,13 +38,13 @@ cont(void **p, int argc, char **argv)
 	z_dlsym = p[1];
 	z_dlclose = p[2];
 	z_dlerror = p[3];
-
 	cvrun_xlib(argc, argv);
 }
 
 int
-cosmogfx_init(int argc, char **argv)
+cosmogfx_init(int argc, char **argv, char **envp)
 {
+
 	dtrampoline_init();
 	if (IsWindows())
 		cvrun_win(argc, argv);
@@ -67,7 +61,7 @@ cosmogfx_init(int argc, char **argv)
 			helper = "/zip/b/helper.nbsd";
 		else
 			helper = "/zip/b/helper.linux";
-		elf_exec(helper, interp, argc, argv);
+		elf_exec(helper, interp, argc, argv, envp);
 	}
 }
 
