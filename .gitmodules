@@ -1,6 +1,3 @@
-[submodule "foreign-dlopen"]
-	path = foreign-dlopen
-	url = git@github.com:jacereda/foreign-dlopen.git
 [submodule "glcv"]
 	path = glcv
 	url = git@github.com:jacereda/glcv
