@@ -132,9 +132,16 @@ elf_exec(
 	struct loaded interp;
 	load(&interp, iinterp);
 
+	char **envv = envp;
+	int    envc = 0;
 	while (*envp++)
-		;
+		envc++;
 	Elf64_auxv_t *av = (Elf64_auxv_t *)envp;
+
+	char **	     sp = argv - 1;
+	const char **nargv = (const char **)&sp[1];
+	int	     nargc = *(long *)sp;
+
 #define AVSET(t, expr)                                      \
 	do {                                                \
 		if (av->a_type == (t))                      \
@@ -153,11 +160,22 @@ elf_exec(
 		++av;
 	}
 #undef AVSET
-	char **sp = argv - 1;
+
+	static struct ps_strings {
+		char **argv;
+		int    argc;
+		char **envv;
+		int    envc;
+	} pss;
+	pss = (struct ps_strings) { argv, argc, envv, envc };
+
 	asm volatile("mov\t%2,%%rsp\n\t"
 		     "jmpq\t*%1"
 		     : /* no outputs */
-		     : "D"(IsFreebsd() ? sp : 0), "S"(interp.entry), "d"(sp)
+		     : "D"(IsFreebsd() ? sp : 0), //
+		     "S"(interp.entry), //
+		     "d"(sp), //
+		     "b"(IsNetbsd() ? &pss : 0)
 		     : "memory");
 	unreachable;
 }
