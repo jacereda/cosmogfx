@@ -54,13 +54,13 @@ cosmogfx_init(int argc, char **argv, char **envp)
 		elf_interp(interp, sizeof(interp), "/usr/bin/env");
 		const char *helper;
 		if (IsOpenbsd())
-			helper = "/zip/b/helper.obsd";
+			helper = "/zip/helper/obsd";
 		else if (IsFreebsd())
-			helper = "/zip/b/helper.fbsd";
+			helper = "/zip/helper/fbsd";
 		else if (IsNetbsd())
-			helper = "/zip/b/helper.nbsd";
+			helper = "/zip/helper/nbsd";
 		else
-			helper = "/zip/b/helper.linux";
+			helper = "/zip/helper/linux";
 		elf_exec(helper, interp, argc, argv, envp);
 	}
 }
