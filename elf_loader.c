@@ -36,7 +36,6 @@ z_fini(void)
 static char *
 loadelf_anon(int fd, Elf64_Ehdr *ehdr, Elf64_Phdr *phdr)
 {
-	bool	  dyn = ehdr->e_type == ET_DYN;
 	uintptr_t minva = -1;
 	uintptr_t maxva = 0;
 	for (Elf64_Phdr *p = phdr; p < &phdr[ehdr->e_phnum]; p++) {
@@ -59,7 +58,7 @@ loadelf_anon(int fd, Elf64_Ehdr *ehdr, Elf64_Phdr *phdr)
 		if (p->p_type != PT_LOAD)
 			continue;
 		uintptr_t off = p->p_vaddr & align_mask;
-		uint8_t * start = dyn ? base : 0;
+		uint8_t * start = base;
 		start += pgtrunc(p->p_vaddr);
 		size_t	 sz = pground(p->p_memsz + off);
 		uint8_t *m = __sys_mmap(start, sz, PROT_WRITE,
@@ -101,7 +100,7 @@ load(struct loaded *l, const char *file)
 	int fd = open(file, O_RDONLY);
 	loadfd(l, fd);
 	l->base = loadelf_anon(fd, &l->eh, l->ph);
-	l->entry += l->eh.e_type == ET_DYN ? (uintptr_t)l->base : 0;
+	l->entry += (uintptr_t)l->base;
 	close(fd);
 }
 
