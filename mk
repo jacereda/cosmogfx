@@ -36,6 +36,3 @@ cosmoc -DDLOPEN=z_dlopen \
        b/helper.nbsd.zip.o \
        -o b/demo.com.dbg
 objcopy --strip-all -Obinary b/demo.com.dbg b/demo.com
-# scp b/demo.com curro:
-scp -P2222 b/demo.com  localhost:
-ssh -XY -p2222 localhost ./demo.com
