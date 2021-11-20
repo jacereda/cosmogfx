@@ -6,8 +6,8 @@ with pkgs;
     let
       cosmopolitan-src = fetchTarball {
         name = "cosmopolitan";
-        url = "https://github.com/jacereda/cosmopolitan/archive/7df37b5.tar.gz";
-        sha256 = "1pl4d5w2kmn08ysmf8xhvg5n7smal253jw1anjnwncf1na1gawrg";
+        url = "https://github.com/jacereda/cosmopolitan/archive/200fd7a55.tar.gz";
+        sha256 = "0jbvsmqrqnwlc9981wlwl6nyyf16mf54k6iwyshw7qzy676g2xd9";
       };
       cosmopolitan = callPackage cosmopolitan-src {};
       mylibs = with xorg; [ glibc libGL libX11 libXcursor libXrender libxkbcommon ];
