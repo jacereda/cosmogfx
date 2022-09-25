@@ -14,7 +14,7 @@ extern int cvrun_win(int, char **);
 #undef osEvent
 #undef cvrun
 
-#include "../cosmopolitan/libc/isystem/windows.h"
+#include <libc/isystem/windows.h>
 #undef cvrun
 #define cvrun cvrun_win
 #define osEvent osEvent_win
